@@ -5,8 +5,8 @@
     <style>
         body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
         .msg { padding: 10px 14px; margin: 8px 0; border-radius: 10px; }
-        .user { background: #10487d; text-align: right; }
-        .agent { background: #10487d; }
+        .user { background: #ffffff; text-align: right; }
+        .agent { background: #ffffff; }
         form { display: flex; gap: 8px; margin-top: 20px; }
         input[type=text] { flex: 1; padding: 10px; }
         button { padding: 10px 16px; }
@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<h2>Inventory Agent</h2>
+<h2>Zoro Inventory Agent</h2>
 
 {% for message in history %}
     <div class="msg {{ message.role }}">{{ message.text }}</div>
