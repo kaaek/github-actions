@@ -31,3 +31,27 @@ jobs:
               run: docker build -t ghcr.io/kaaek/github-actions:latest .
             - name: Push Docker image
               run: docker push ghcr.io/kaaek/github-actions:latest
+
+    deploy:
+        needs: test
+        runs-on: [self-hosted, inventory-deploy]
+        steps:
+            - name: Check Docker
+              run: docker info --format "Docker server {{.ServerVersion}} | {{.OSType}}"
+            - name: Log in to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - name: Pull image
+              run: docker pull --platform linux/amd64 ghcr.io/kaaek/github-actions:latest
+            - name: Deploy
+              env:
+                  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+              run: |
+                  docker rm -f inventory-app 2>/dev/null || true
+                  docker run -d --platform linux/amd64 --name inventory-app \
+                    -e GEMINI_API_KEY \
+                    -p 127.0.0.1:8000:8000 \
+                    ghcr.io/kaaek/github-actions:latest
