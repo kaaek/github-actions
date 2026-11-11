@@ -36,6 +36,10 @@ jobs:
         needs: test
         runs-on: [self-hosted, inventory-deploy]
         steps:
+            - name: Use isolated Docker config
+              run: |
+                  mkdir -p "$RUNNER_TEMP/docker-config"
+                  echo "DOCKER_CONFIG=$RUNNER_TEMP/docker-config" >> "$GITHUB_ENV"
             - name: Check Docker
               run: docker info --format "Docker server {{.ServerVersion}} | {{.OSType}}"
             - name: Log in to GitHub Container Registry
